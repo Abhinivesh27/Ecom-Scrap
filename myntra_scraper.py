@@ -37,12 +37,21 @@ def get_data(url):
         res.raise_for_status()
     except Exception as exc:
         print("There was a problem: %s" % (exc))
-    
-    print('making soup...')
+    #print('making soup...')
     soup_res = bs4.BeautifulSoup(res.text,'html.parser')
-
     scripts = soup_res.find_all('script')
-    data = json.loads(scripts[11].string[15:])
+    #print(str(type(scripts[11].string[15:])) + " Printing data")
+      
+    data = {}
+    saveFile = open("jsonFile.json","x+")
+    saveFile.write(str(scripts[11].string[15:]))
+    saveFile.close()
+    try:
+        data = json.loads(str(scripts[11].string[15:]))
+    except ValueError as exp:
+        print(type(exp))
+        print(exp.args)
+    
     id  = data["pdpData"]['id']
     brand = data["pdpData"]['brand']['name']
     product = data["pdpData"]['analytics']['articleType']
@@ -87,8 +96,9 @@ def main():
     get_url(links)
     t1 = time.time()
 
-    print(f"{t1-t0} seconds to download {len(links)} product links.")
+    #print(f"{t1-t0} seconds to download {len(links)} product links.")
     with open(output_file_name,'w' ,encoding="utf-8") as f:
+        print("FINAL DATA -> "+str(final_data))
         json.dump(final_data, f, indent=4)
     print("File saved", output_file_name)
 

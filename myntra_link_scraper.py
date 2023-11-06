@@ -3,6 +3,7 @@
 
 import bs4
 import time
+from selenium.webdriver.common.by import By
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 import sys
@@ -40,7 +41,7 @@ def get_product_links(url):
         print('getting page')
 
         driver.get(url)
-        elem = driver.find_element_by_class_name('results-base')
+        elem = driver.find_element(By.CLASS_NAME,'results-base')
         code = elem.get_attribute('innerHTML')
         
         
